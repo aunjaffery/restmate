@@ -20,6 +20,7 @@ export namespace main {
 	    bodyContent: string;
 	    errorContent: string;
 	    contentType: string;
+	    duration: string;
 	    headers: Header[];
 	
 	    static createFrom(source: any = {}) {
@@ -33,6 +34,7 @@ export namespace main {
 	        this.bodyContent = source["bodyContent"];
 	        this.errorContent = source["errorContent"];
 	        this.contentType = source["contentType"];
+	        this.duration = source["duration"];
 	        this.headers = this.convertValues(source["headers"], Header);
 	    }
 	

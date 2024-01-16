@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // App struct
@@ -32,6 +33,7 @@ type Result struct {
 	BodyContent  string   `json:"bodyContent"`
 	ErrorContent string   `json:"errorContent"`
 	ContentType  string   `json:"contentType"`
+	Duration     string   `json:"duration"`
 	Headers      []Header `json:"headers"`
 }
 type Header struct {
@@ -56,7 +58,9 @@ func (a *App) Run(method string, url string, body string, contentType string, he
 		}
 	}
 	cli := http.Client{}
+	startTime := time.Now()
 	response, err := cli.Do(req)
+	duration := time.Since(startTime).Round(time.Millisecond)
 	if err != nil {
 		return result, fmt.Errorf("restmate:%v", err)
 	}
@@ -71,6 +75,7 @@ func (a *App) Run(method string, url string, body string, contentType string, he
 		return result, fmt.Errorf("read body error: %v", err)
 	}
 	result.BodyContent = string(buf)
+	result.Duration = duration.String()
 	return result, nil
 
 }

@@ -4,7 +4,7 @@ import { nordInit } from "@uiw/codemirror-theme-nord";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 
 const RspComp = ({ reqLoading, rspObj }) => {
-  const { bodyContent, statusCode } = rspObj || {};
+  const { bodyContent, statusCode, duration } = rspObj || {};
   return (
     <Box w="full">
       <Box pl="4" mt="2" w="full">
@@ -12,8 +12,8 @@ const RspComp = ({ reqLoading, rspObj }) => {
           <Text fontWeight="bold" fontSize="sm" color="gray.300">
             Response
           </Text>
-          {statusCode && (
-            <Flex align="center" gridColumnGap={6}>
+          <Flex align="center" gridColumnGap={6}>
+            {statusCode && (
               <Flex align="center">
                 <Text fontSize="sm" mr="1">
                   Status:
@@ -29,16 +29,18 @@ const RspComp = ({ reqLoading, rspObj }) => {
                   {statusCode}
                 </Text>
               </Flex>
+            )}
+            {duration && (
               <Flex align="center">
                 <Text fontSize="sm" mr="1">
                   Time:
                 </Text>
                 <Text fontSize="sm" color="green.300">
-                  782ms
+                  {duration}
                 </Text>
               </Flex>
-            </Flex>
-          )}
+            )}
+          </Flex>
         </Flex>
         <Box
           borderWidth="1px"

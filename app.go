@@ -39,21 +39,7 @@ type Header struct {
 	Value string `json:"value"`
 }
 
-func (a *App) Test(method string, url string, body string, contentType string) (string, error) {
-	fmt.Println("method", method)
-	fmt.Println("url", url)
-	fmt.Println("contentType", contentType)
-	fmt.Println("body", body)
-	return "All done", nil
-
-}
-
 func (a *App) Run(method string, url string, body string, contentType string, headers []Header) (Result, error) {
-	fmt.Println("method", method)
-	fmt.Println("url", url)
-	fmt.Println("contentType", contentType)
-	fmt.Println("body", body)
-	fmt.Println("heads", headers)
 	var err error
 	var result Result
 	req, err := http.NewRequest(method, url, bytes.NewReader([]byte(body)))

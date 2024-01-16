@@ -3,5 +3,3 @@
 import {main} from '../models';
 
 export function Run(arg1:string,arg2:string,arg3:string,arg4:string,arg5:Array<main.Header>):Promise<main.Result>;
-
-export function Test(arg1:string,arg2:string,arg3:string,arg4:string):Promise<string>;

@@ -9,34 +9,41 @@ import {
 } from "@chakra-ui/react";
 import { nanoid } from "nanoid";
 import { LuX } from "react-icons/lu";
+import { useSnapshot } from "valtio";
+import { store } from "../../AppStore";
 
-const ParamsTab = ({ reqParams, setReqParams }) => {
-  const onChangeHandler = (e, id) => {
-    let name = e.target.name;
-    const findParams = reqParams.find((p) => p.id === id);
-    findParams[name] = name === "active" ? e.target.checked : e.target.value;
-    setReqParams([...reqParams]);
-  };
+const ParamsTab = ({ tab_id }) => {
+  console.log("__PARAMS TAB__");
+  let t = store.tabs.find((t) => t.id === tab_id);
+  const { params } = useSnapshot(t);
   const findEmpty = () => {
-    const findParams = reqParams.find((p) => p.key === "");
-    if (findParams) return false;
-    if (reqParams.length > 9) return false;
-    return true;
+    if (t.params) {
+      const findParams = t.params.find((p) => p.key === "");
+      if (findParams) return false;
+      if (t.params.length > 9) return false;
+      return true;
+    } else return true;
   };
-  const onAddReqParams = () => {
-    if (reqParams.length > 9) return;
-    let newParm = {
+  const onAddNewParam = () => {
+    let newParam = {
       id: nanoid(),
       key: "",
       value: "",
       active: true,
     };
-    setReqParams([...reqParams, newParm]);
+    t.params.push(newParam);
   };
-  const onRmReqParams = (id) => {
-    if (reqParams.length <= 1) return;
-    let filter = reqParams.filter((p) => p.id !== id);
-    setReqParams([...filter]);
+
+  const onChangeParam = (e, prm_id) => {
+    let name = e.target.name;
+    let p = t.params.find((p) => p.id === prm_id);
+    p[name] = name === "active" ? e.target.checked : e.target.value;
+  };
+  const onRmParam = (prm_id) => {
+    const index = t.params.findIndex((t) => t.id === prm_id);
+    if (index >= 0) {
+      t.params.splice(index, 1);
+    }
   };
   return (
     <Box mt="2" pr="6">
@@ -45,63 +52,64 @@ const ParamsTab = ({ reqParams, setReqParams }) => {
           Query Params
         </Text>
       </Box>
-      {reqParams.map((p, i) => (
-        <Flex
-          key={p.id}
-          borderWidth="1px"
-          borderColor="gray.700"
-          align="center"
-          w="full"
-          borderRadius="sm"
-        >
-          <Flex px="2" borderRightWidth="1px" borderColor="gray.700" h="full">
-            <Checkbox
-              colorScheme="gray"
-              isChecked={p.active}
-              name="active"
-              onChange={(e) => onChangeHandler(e, p.id)}
-            />
-          </Flex>
-          <Box flex={2} borderRightWidth="1px" borderColor="gray.700">
-            <Input
-              size="sm"
-              borderWidth={0}
-              placeholder="Key"
-              color={p.active ? "white" : "gray.600"}
-              value={p.key}
-              name="key"
-              onChange={(e) => onChangeHandler(e, p.id)}
-            />
-          </Box>
-          <Box flex={3}>
-            <InputGroup size="sm">
-              <Input
-                borderWidth={0}
-                placeholder="Value"
-                color={p.active ? "white" : "gray.600"}
-                value={p.value}
-                name="value"
-                onChange={(e) => onChangeHandler(e, p.id)}
+      {params &&
+        params.map((p, i) => (
+          <Flex
+            key={p.id}
+            borderWidth="1px"
+            borderColor="gray.700"
+            align="center"
+            w="full"
+            borderRadius="sm"
+          >
+            <Flex px="2" borderRightWidth="1px" borderColor="gray.700" h="full">
+              <Checkbox
+                colorScheme="gray"
+                isChecked={p.active}
+                name="active"
+                onChange={(e) => onChangeParam(e, p.id)}
               />
-              {i === 0 ? null : (
-                <InputRightElement>
-                  <Box
-                    cursor="pointer"
-                    onClick={() => onRmReqParams(p.id)}
-                    color="gray.600"
-                    _hover={{ color: "white" }}
-                  >
-                    <LuX />
-                  </Box>
-                </InputRightElement>
-              )}
-            </InputGroup>
-          </Box>
-        </Flex>
-      ))}
+            </Flex>
+            <Box flex={2} borderRightWidth="1px" borderColor="gray.700">
+              <Input
+                size="sm"
+                borderWidth={0}
+                placeholder="Key"
+                color={p.active ? "white" : "gray.600"}
+                value={p.key}
+                name="key"
+                onChange={(e) => onChangeParam(e, p.id)}
+              />
+            </Box>
+            <Box flex={3}>
+              <InputGroup size="sm">
+                <Input
+                  borderWidth={0}
+                  placeholder="Value"
+                  color={p.active ? "white" : "gray.600"}
+                  value={p.value}
+                  name="value"
+                  onChange={(e) => onChangeParam(e, p.id)}
+                />
+                {i === 0 ? null : (
+                  <InputRightElement>
+                    <Box
+                      cursor="pointer"
+                      onClick={() => onRmParam(p.id)}
+                      color="gray.600"
+                      _hover={{ color: "white" }}
+                    >
+                      <LuX />
+                    </Box>
+                  </InputRightElement>
+                )}
+              </InputGroup>
+            </Box>
+          </Flex>
+        ))}
       {findEmpty() ? (
         <Flex>
-          <Box cursor="pointer" onClick={onAddReqParams} mt="2">
+          <Box cursor="pointer" onClick={onAddNewParam} mt="2">
             <Text
               color="fuse.300"
               fontSize="sm"

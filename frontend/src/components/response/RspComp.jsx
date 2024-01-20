@@ -46,7 +46,7 @@ const RspComp = ({ reqLoading, rspObj }) => {
           borderWidth="1px"
           borderColor="gray.700"
           w="full"
-          h="calc(100vh - 220px)"
+          h="calc(100vh - 260px)"
         >
           {reqLoading ? (
             <Flex justify="center" align="center" w="full" h="full">

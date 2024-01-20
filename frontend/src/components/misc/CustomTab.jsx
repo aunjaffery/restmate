@@ -8,7 +8,7 @@ const CustomTab = React.forwardRef(({ t, onCloseTab }, ref) => {
   const isSelected = !!tabProps["aria-selected"];
 
   return (
-    <Box w="200px">
+    <Box maxW="200px" minW="130px">
       <Flex
         align="center"
         w="full"
@@ -23,13 +23,13 @@ const CustomTab = React.forwardRef(({ t, onCloseTab }, ref) => {
           cursor="pointer"
           {...tabProps}
           _focusVisible={{ outline: "none" }}
-          color={isSelected ? "white" : "gray.500"}
-          _hover={{ color: "white" }}
+          _hover={{ color: "white", opacity: 1 }}
+          opacity={isSelected ? 1 : 0.6}
         >
-          <Box mr="1" mb="2px">
+          <Box mr="1">
             <CrudIcon crud={t.crud} size="xs" />
           </Box>
-          <Text fontSize="sm" noOfLines={1}>
+          <Text fontSize="xs" noOfLines={1}>
             {t.title}
           </Text>
         </Flex>

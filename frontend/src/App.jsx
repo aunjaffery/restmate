@@ -1,54 +1,48 @@
-import { Box, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import Layout from "./components/misc/Layout";
-import { useState, cloneElement } from "react";
-import { nanoid } from "nanoid";
 import CustomTab from "./components/misc/CustomTab";
 import { LuPlus } from "react-icons/lu";
 import ReqTab from "./components/reqTab/ReqTab";
+import { useSnapshot } from "valtio";
+import { addNewTab, onCloseTab, store } from "./AppStore";
 
-function App() {
-  const t_list = [
-    { id: nanoid(), name: "restmate", crud: "GET", load: <ReqTab /> },
-  ];
-  const [tablist, setTablist] = useState(t_list);
-
-  const addNewTab = () => {
-    let newTab = {
-      id: nanoid(),
-      crud: "GET",
-      name: "Untitled Request",
-      load: <ReqTab />,
-    };
-    setTablist([...tablist, newTab]);
-  };
-
-  const onCrudChange = (crud, id) => {
-    const findTab = tablist.find((t) => t.id === id);
-    findTab.crud = crud;
-    setTablist([...tablist]);
-  };
-  const onCloseTab = (id) => {
-    const delTab = tablist.filter((x) => x.id !== id);
-    setTablist([...delTab]);
-  };
+const App = () => {
+  console.log("--- APP reRender ---");
+  const tabs = useSnapshot(store.tabs);
+  console.log(store.tabs);
   return (
-    <Box>
+    <Box w="full">
       <Layout>
         <Box>
-          <Tabs variant="enclosed">
+          <Tabs variant="enclosed" w="full" maxW="full">
             <TabList
               borderWidth={0}
               borderBottomWidth="1px"
               alignItems="center"
             >
-              {tablist.map((t) => (
-                <CustomTab
-                  key={t.id}
-                  t={{ id: t.id, title: t.name, crud: t.crud }}
-                  onCloseTab={onCloseTab}
-                />
-              ))}
-              <Box onClick={addNewTab} ml="2" color="gray.500">
+              <Flex
+                overflowX="auto"
+              >
+                {tabs.map((t) => (
+                  <CustomTab
+                    key={t.id}
+                    t={{
+                      id: t.id,
+                      title: t.name,
+                      crud: t.crud,
+                    }}
+                    onCloseTab={onCloseTab}
+                  />
+                ))}
+              </Flex>
+              <Box onClick={addNewTab} mx="2" color="gray.500">
                 <Box
                   p="1"
                   cursor="pointer"
@@ -63,9 +57,9 @@ function App() {
               </Box>
             </TabList>
             <TabPanels>
-              {tablist.map(({ load, ...rest }) => (
-                <TabPanel key={rest.id} p="0">
-                  {cloneElement(load, { tabdata: rest, onCrudChange })}
+              {tabs.map((t) => (
+                <TabPanel key={t.id} p="0">
+                  <ReqTab tab_id={t.id} />
                 </TabPanel>
               ))}
             </TabPanels>
@@ -74,6 +68,6 @@ function App() {
       </Layout>
     </Box>
   );
-}
+};
 
 export default App;

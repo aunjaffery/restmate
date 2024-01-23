@@ -29,38 +29,6 @@ export const store = proxy({
         },
       ],
     },
-    {
-      id: "qwe223",
-      name: "New Request",
-      crud: "POST",
-      url: "https://Hello.com",
-      body: {
-        type: "",
-        payload: "",
-      },
-      params: [
-        {
-          id: nanoid(),
-          key: "limit",
-          value: "5",
-          active: true,
-        },
-        {
-          id: nanoid(),
-          key: "page",
-          value: "2",
-          active: true,
-        },
-      ],
-      headers: [
-        {
-          id: nanoid(),
-          key: "Authorization",
-          value: "Bearer qwopqfo3pojxp23",
-          active: true,
-        },
-      ],
-    },
   ],
 });
 export const addNewTab = () => {

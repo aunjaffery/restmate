@@ -12,16 +12,26 @@ import { LuPlus } from "react-icons/lu";
 import ReqTab from "./components/reqTab/ReqTab";
 import { useSnapshot } from "valtio";
 import { addNewTab, onCloseTab, store } from "./AppStore";
+import { useEffect } from "react";
+import { getCollections } from "./ColStore";
 
 const App = () => {
   console.log("--- APP reRender ---");
   const tabs = useSnapshot(store.tabs);
-  console.log(store.tabs);
+  useEffect(() => {
+    getCollections();
+  }, []);
   return (
     <Box w="full">
       <Layout>
         <Box>
-          <Tabs variant="enclosed" w="full" maxW="full">
+          <Tabs
+            variant="enclosed"
+            w="full"
+            maxW="full"
+            // index={tabIndex}
+            // onChange={onTabchange}
+          >
             <TabList
               borderWidth={0}
               borderBottomWidth="1px"
@@ -29,6 +39,18 @@ const App = () => {
             >
               <Flex
                 overflowX="auto"
+                sx={{
+                  "&::-webkit-scrollbar-track": {
+                    bg: "transparent",
+                  },
+                  "&::-webkit-scrollbar": {
+                    height: "2px",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    bg: "fuse.400",
+                    borderRadius: "20px",
+                  },
+                }}
               >
                 {tabs.map((t) => (
                   <CustomTab

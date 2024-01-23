@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -24,21 +25,91 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-
 }
 
-type Result struct {
-	StatusCode   int      `json:"statusCode"`
-	HttpStatus   string   `json:"httpStatus"`
-	BodyContent  string   `json:"bodyContent"`
-	ErrorContent string   `json:"errorContent"`
-	ContentType  string   `json:"contentType"`
-	Duration     string   `json:"duration"`
-	Headers      []Header `json:"headers"`
+func (a *App) GetCollectionRequest(col_id string, req_id string) (*Request, error) {
+	content, err := readOrCreateFile()
+	if err != nil {
+		return nil, fmt.Errorf("Error reading collections: %v", err)
+	}
+	var cols []FullCollection
+	err = json.Unmarshal(content, &cols)
+	if err != nil {
+		fmt.Println("error", err)
+		return nil, fmt.Errorf("Error in json unmarshal: %v", err)
+	}
+	fmt.Printf("%+v\n", cols)
+	var req Request
+	for i := range cols {
+		if cols[i].ID == col_id {
+			for r := range cols[i].Requests {
+				if cols[i].Requests[r].ID == req_id {
+					req = cols[i].Requests[r]
+				}
+			}
+		}
+	}
+	return &req, nil
 }
-type Header struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+func (a *App) SaveToCollection(req Request) (bool, error) {
+	fmt.Println("---- SaveToCollection ----")
+
+	content, err := readOrCreateFile()
+	if err != nil {
+		return false, fmt.Errorf("Error reading collections: %v", err)
+	}
+	var cols []FullCollection
+	err = json.Unmarshal(content, &cols)
+	if err != nil {
+		fmt.Println("error", err)
+		return false, fmt.Errorf("Error in json unmarshal: %v", err)
+	}
+	fmt.Printf("%+v\n", cols)
+	for i := range cols {
+		if cols[i].ID == req.ColID {
+			if len(cols[i].Requests) != 0 {
+				for j := range cols[i].Requests {
+					if cols[i].Requests[j].ID == req.ID {
+						cols[i].Requests[j] = req
+						break
+					} else {
+						cols[i].Requests = append(cols[i].Requests, req)
+						break
+					}
+				}
+			} else {
+				cols[i].Requests = append(cols[i].Requests, req)
+				break
+			}
+		}
+	}
+	b, err := json.Marshal(cols)
+	if err != nil {
+		fmt.Println("error", err)
+		return false, fmt.Errorf("Error in json marshal: %v", err)
+	}
+	err = WriteFile(b)
+	if err != nil {
+		return false, fmt.Errorf("Error in Writing: %v", err)
+	}
+	return true, nil
+}
+
+func (a *App) GetCollections() ([]SmartCollection, error) {
+	var err error
+	content, err := readOrCreateFile()
+	if err != nil {
+		return nil, fmt.Errorf("Error reading collections: %v", err)
+	}
+	var cols []SmartCollection
+	err = json.Unmarshal(content, &cols)
+	if err != nil {
+		fmt.Println("error", err)
+		return nil, fmt.Errorf("Error in json unmarshal: %v", err)
+	}
+	fmt.Printf("%+v\n", cols)
+
+	return cols, err
 }
 
 func (a *App) Run(method string, url string, body string, contentType string, headers []Header) (Result, error) {

@@ -2,7 +2,10 @@ module changeme
 
 go 1.18
 
-require github.com/wailsapp/wails/v2 v2.7.1
+require (
+	github.com/adrg/xdg v0.4.0
+	github.com/wailsapp/wails/v2 v2.7.1
+)
 
 require (
 	github.com/bep/debounce v1.2.1 // indirect

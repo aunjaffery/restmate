@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import "./main.css";
+import { Flip, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const config = {
   initialColorMode: "dark",
   useSystemColorMode: false,
@@ -25,5 +27,15 @@ const theme = extendTheme({ config, colors });
 root.render(
   <ChakraProvider theme={theme}>
     <App />
+    <ToastContainer
+      position="bottom-right"
+      autoClose={2000}
+      closeOnClick
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="dark"
+      transition={Flip}
+    />
   </ChakraProvider>,
 );

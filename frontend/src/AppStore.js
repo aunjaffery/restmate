@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import { proxy } from "valtio";
+import { GetCollectionRequest } from "../wailsjs/go/main/App";
 
 export const store = proxy({
   tabs: [
@@ -60,10 +61,16 @@ export const addNewTab = () => {
   };
   store.tabs.push({ ...newTab });
 };
-export const openColTab = (colTab) => {
-  let find = store.tabs.find((x) => x.id === colTab.id);
-  if (find) return;
-  store.tabs.push({ ...colTab });
+export const openColTab = async (col_id, req_id) => {
+  if (!col_id || !req_id) return;
+  let f = store.tabs.find((t) => t.id === req_id);
+  if (f) return;
+  try {
+    let r = await GetCollectionRequest(col_id, req_id);
+    store.tabs.push({ ...r });
+  } catch (error) {
+    console.log(error);
+  }
 };
 export const onCloseTab = (id) => {
   const index = store.tabs.findIndex((t) => t.id === id);

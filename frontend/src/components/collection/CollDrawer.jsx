@@ -6,70 +6,93 @@ import {
   AccordionPanel,
   Box,
   Flex,
+  IconButton,
   Input,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { LuCheck, LuMoreHorizontal, LuPlus, LuX } from "react-icons/lu";
+import { LuArrowUpRight, LuCheck, LuPlus, LuX } from "react-icons/lu";
 import CrudIcon from "../misc/CrudIcon";
 import { openColTab } from "../../AppStore";
 import { useSnapshot } from "valtio";
 import { collection } from "../../ColStore";
+import { nanoid } from "nanoid";
+import { CreateCollection } from "../../../wailsjs/go/main/App";
+import { toast } from "react-toastify";
+import ColDetail from "../modal/ColDetail";
 
 const CollDrawer = () => {
   const { isOpen, onToggle } = useDisclosure();
+  const {
+    isOpen: isOpenM,
+    onOpen: onOpenM,
+    onClose: onCloseM,
+  } = useDisclosure();
   let { cols } = useSnapshot(collection);
   console.log("real cols-->", cols);
-  let onAdd = (r) => {
-    if (r.id !== "pop01" && r.id !== "pop02") return;
-    openColTab(r);
+
+  const createNewCol = async (e) => {
+    e.preventDefault();
+    let name = e.target.name.value;
+    if (!name) return;
+    let id = nanoid();
+    try {
+      console.log(id, name);
+      let c = await CreateCollection(id, name);
+      collection.cols = [...c];
+      onToggle();
+    } catch (error) {
+      //toast not working for error
+      console.log("in error", error);
+      toast.error("hello");
+    }
   };
+
   return (
     <Box w="300px" minW="300px" borderColor="gray.700" borderRightWidth="1px">
       <Box h="37px" borderColor="gray.700" borderBottomWidth="1px">
         {isOpen ? (
-          <Flex h="full" align="center" justify="space-between">
-            <Box w="full" pl="2">
-              <Input
-                size="sm"
-                placeholder="Collection name"
-                p="1"
-                borderWidth={0}
-                borderBottomWidth="1px"
-                borderBottomColor="fuse.300"
-                _focusVisible={{ outline: "none" }}
-                _hover={{ borderBottomColor: "fuse.300" }}
+          <form onSubmit={createNewCol}>
+            <Flex h="full" align="center" justify="space-between">
+              <Box w="full" pl="2">
+                <Input
+                  size="sm"
+                  placeholder="Collection name"
+                  p="1"
+                  name="name"
+                  borderWidth={0}
+                  borderBottomWidth="1px"
+                  borderBottomColor="fuse.300"
+                  _focusVisible={{ outline: "none" }}
+                  _hover={{ borderBottomColor: "fuse.300" }}
+                />
+              </Box>
+              <IconButton
+                type="submit"
+                ml="1"
+                color="gray.500"
+                size="xs"
+                icon={<LuCheck size="16" />}
+                bg="none"
+                _hover={{
+                  bg: "gray.600",
+                  color: "white",
+                }}
               />
-            </Box>
-            <Box
-              onClick={onToggle}
-              p="1"
-              ml="2"
-              borderRadius="lg"
-              color="gray.500"
-              cursor="pointer"
-              _hover={{
-                bg: "gray.600",
-                color: "white",
-              }}
-            >
-              <LuCheck />
-            </Box>
-            <Box
-              onClick={onToggle}
-              p="1"
-              mr="2"
-              borderRadius="lg"
-              color="gray.500"
-              cursor="pointer"
-              _hover={{
-                bg: "gray.600",
-                color: "white",
-              }}
-            >
-              <LuX />
-            </Box>
-          </Flex>
+              <IconButton
+                onClick={onToggle}
+                mr="2"
+                color="gray.500"
+                size="xs"
+                icon={<LuX size="16" />}
+                bg="none"
+                _hover={{
+                  bg: "gray.600",
+                  color: "white",
+                }}
+              />
+            </Flex>
+          </form>
         ) : (
           <Flex h="100%" align="center" pl="4" justify="space-between">
             <Text fontSize="sm" fontWeight="bold">
@@ -100,7 +123,6 @@ const CollDrawer = () => {
               <AccordionItem key={d.id} border="none">
                 <Flex
                   align="center"
-                  pr="4"
                   color="gray.400"
                   _hover={{ color: "white" }}
                 >
@@ -110,11 +132,17 @@ const CollDrawer = () => {
                       <Text fontSize="sm">{d.name}</Text>
                     </Box>
                   </AccordionButton>
-                  <Box cursor="pointer">
-                    <LuMoreHorizontal />
+                  <Box
+                    pr="4"
+                    cursor="pointer"
+                    _hover={{ color: "blue.400" }}
+                    onClick={onOpenM}
+                  >
+                    <LuArrowUpRight size="16" />
                   </Box>
                 </Flex>
-                {d.requests &&
+
+                {d.requests && d.requests.length ? (
                   d.requests.map((r) => (
                     <AccordionPanel
                       p={1}
@@ -123,7 +151,7 @@ const CollDrawer = () => {
                       key={r.id}
                       cursor="pointer"
                       _hover={{ color: "white", bg: "fuse.400" }}
-                      onClick={() => onAdd(r)}
+                      onClick={() => openColTab(d.id, r.id)}
                     >
                       <Flex align="center" gridColumnGap={2}>
                         <CrudIcon crud={r.crud} />
@@ -132,11 +160,22 @@ const CollDrawer = () => {
                         </Text>
                       </Flex>
                     </AccordionPanel>
-                  ))}
+                  ))
+                ) : (
+                  <AccordionPanel
+                    p={1}
+                    pl="8"
+                    color="gray.400"
+                    cursor="pointer"
+                  >
+                    <Text fontSize="sm">No requests found</Text>
+                  </AccordionPanel>
+                )}
               </AccordionItem>
             ))}
         </Accordion>
       </Box>
+      <ColDetail isOpen={isOpenM} onClose={onCloseM} />
     </Box>
   );
 };

@@ -12,7 +12,7 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import { collection, getCollections } from "../../ColStore";
+import { collection } from "../../ColStore";
 import { useSnapshot } from "valtio";
 import { LuBookmark } from "react-icons/lu";
 import { useState } from "react";
@@ -33,7 +33,7 @@ const SaveReq = ({ isOpen, onClose, req }) => {
       console.log("Rsp ->", r);
       setSelectedID(null);
       onClose();
-      await getCollections();
+      collection.cols = [...r];
     } catch (err) {
       console.log(err);
     }
@@ -85,6 +85,7 @@ const SaveReq = ({ isOpen, onClose, req }) => {
                 borderWidth="1px"
                 borderColor="gray.700"
                 maxH="500px"
+                minH="200px"
                 overflowY="auto"
               >
                 {cols &&

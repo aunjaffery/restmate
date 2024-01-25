@@ -1,7 +1,14 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { LuBookmark, LuFileCog, LuSettings } from "react-icons/lu";
 
 const SideMenu = ({ onToggle }) => {
+  const { toggleColorMode } = useColorMode();
   let menuStyle = {
     direction: "column",
     align: "center",
@@ -9,13 +16,18 @@ const SideMenu = ({ onToggle }) => {
     cursor: "pointer",
     py: "2",
     _hover: {
-      color: "white",
-      bg: "fuse.200",
+      color: useColorModeValue("black", "white"),
+      bg: useColorModeValue("light.200", "dark.200"),
     },
   };
   return (
-    <Box borderColor="gray.700" borderRightWidth="1px" w="80px" maxW="80px">
-      <Flex direction="column" gridRowGap="2" mt="2" color="gray.400">
+    <Box
+      borderColor={useColorModeValue("light.50", "dark.50")}
+      borderRightWidth="1px"
+      w="80px"
+      maxW="80px"
+    >
+      <Flex direction="column" gridRowGap="2" mt="2" color="gray.500">
         <Flex {...menuStyle} onClick={onToggle}>
           <LuBookmark size="18" />
           <Text fontSize="xs" mt="1">
@@ -28,7 +40,7 @@ const SideMenu = ({ onToggle }) => {
             Variables
           </Text>
         </Flex>
-        <Flex {...menuStyle}>
+        <Flex {...menuStyle} onClick={toggleColorMode}>
           <LuSettings size="18" />
           <Text fontSize="xs" mt="1">
             Settings

@@ -6,12 +6,7 @@ import CollDrawer from "../collection/CollDrawer";
 const Layout = ({ children }) => {
   const { isOpen, onToggle } = useDisclosure();
   return (
-    <Box
-      bg={useColorModeValue(
-        "none",
-        "linear-gradient(90deg, rgb(18, 34, 48) 0px, rgb(9, 17, 24))",
-      )}
-    >
+    <Box pt="1" bg={useColorModeValue("light.100", "dark.100")}>
       <Box h="100vh" w="100vw">
         <Flex h="full" w="full">
           <SideMenu onToggle={onToggle} />

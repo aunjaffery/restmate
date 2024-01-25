@@ -4,9 +4,15 @@ import {main} from '../models';
 
 export function CreateCollection(arg1:string,arg2:string):Promise<Array<main.SmartCollection>>;
 
+export function DeleteCollection(arg1:string):Promise<Array<main.SmartCollection>>;
+
+export function ExportCollection(arg1:string):Promise<main.FullCollection>;
+
 export function GetCollectionRequest(arg1:string,arg2:string):Promise<main.Request>;
 
 export function GetCollections():Promise<Array<main.SmartCollection>>;
+
+export function RenameCollection(arg1:string,arg2:string):Promise<Array<main.SmartCollection>>;
 
 export function Run(arg1:string,arg2:string,arg3:string,arg4:string,arg5:Array<main.Header>):Promise<main.Result>;
 

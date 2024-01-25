@@ -1,6 +1,6 @@
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
 import { json } from "@codemirror/lang-json";
-import { nordInit } from "@uiw/codemirror-theme-nord";
+import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 
 const RspComp = ({ reqLoading, rspObj }) => {
@@ -9,7 +9,7 @@ const RspComp = ({ reqLoading, rspObj }) => {
     <Box w="full">
       <Box pl="4" mt="2" w="full">
         <Flex justify="space-between" align="center" pr="2" mb="4">
-          <Text fontWeight="bold" fontSize="sm" color="gray.300">
+          <Text fontWeight="bold" fontSize="sm" color="gray.500">
             Response
           </Text>
           <Flex align="center" gridColumnGap={6}>
@@ -44,13 +44,13 @@ const RspComp = ({ reqLoading, rspObj }) => {
         </Flex>
         <Box
           borderWidth="1px"
-          borderColor="gray.700"
+          borderColor={useColorModeValue("light.50", "dark.50")}
           w="full"
           h="calc(100vh - 260px)"
         >
           {reqLoading ? (
             <Flex justify="center" align="center" w="full" h="full">
-              <Spinner size="lg" color="fuse.300" />
+              <Spinner size="lg" color="dark.300" />
             </Flex>
           ) : bodyContent ? (
             <CodeMirror
@@ -63,16 +63,27 @@ const RspComp = ({ reqLoading, rspObj }) => {
                 foldGutter: true,
                 lintKeymap: true,
               }}
-              theme={nordInit({
-                settings: {
-                  background: "none",
-                  gutterBackground: "transparent",
-                },
-              })}
+              theme={useColorModeValue(
+                githubLightInit({
+                  settings: {
+                    background: "none",
+                    gutterBackground: "transparent",
+                  },
+                }),
+                githubDarkInit({
+                  settings: {
+                    background: "none",
+                    gutterBackground: "transparent",
+                  },
+                }),
+              )}
             />
           ) : (
             <Flex justify="center" align="center" w="full" h="full">
-              <Text fontSize="sm" color="gray.500">
+              <Text
+                fontSize="sm"
+                color={useColorModeValue("gray.400", "gray.600")}
+              >
                 Click Send to get a reponse
               </Text>
             </Flex>

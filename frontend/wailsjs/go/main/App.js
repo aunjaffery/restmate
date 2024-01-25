@@ -6,12 +6,24 @@ export function CreateCollection(arg1, arg2) {
   return window['go']['main']['App']['CreateCollection'](arg1, arg2);
 }
 
+export function DeleteCollection(arg1) {
+  return window['go']['main']['App']['DeleteCollection'](arg1);
+}
+
+export function ExportCollection(arg1) {
+  return window['go']['main']['App']['ExportCollection'](arg1);
+}
+
 export function GetCollectionRequest(arg1, arg2) {
   return window['go']['main']['App']['GetCollectionRequest'](arg1, arg2);
 }
 
 export function GetCollections() {
   return window['go']['main']['App']['GetCollections']();
+}
+
+export function RenameCollection(arg1, arg2) {
+  return window['go']['main']['App']['RenameCollection'](arg1, arg2);
 }
 
 export function Run(arg1, arg2, arg3, arg4, arg5) {

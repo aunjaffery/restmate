@@ -14,20 +14,6 @@ export namespace main {
 	        this.payload = source["payload"];
 	    }
 	}
-	export class Header {
-	    key: string;
-	    value: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new Header(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.key = source["key"];
-	        this.value = source["value"];
-	    }
-	}
 	export class Keyval {
 	    id: string;
 	    key: string;
@@ -44,22 +30,6 @@ export namespace main {
 	        this.key = source["key"];
 	        this.value = source["value"];
 	        this.active = source["active"];
-	    }
-	}
-	export class ReqNames {
-	    id: string;
-	    name: string;
-	    crud: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new ReqNames(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.name = source["name"];
-	        this.crud = source["crud"];
 	    }
 	}
 	export class Request {
@@ -106,6 +76,72 @@ export namespace main {
 		    return a;
 		}
 	}
+	export class FullCollection {
+	    id: string;
+	    name: string;
+	    requests: Request[];
+	
+	    static createFrom(source: any = {}) {
+	        return new FullCollection(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.requests = this.convertValues(source["requests"], Request);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class Header {
+	    key: string;
+	    value: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Header(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.key = source["key"];
+	        this.value = source["value"];
+	    }
+	}
+	
+	export class ReqNames {
+	    id: string;
+	    name: string;
+	    crud: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ReqNames(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.crud = source["crud"];
+	    }
+	}
+	
 	export class Result {
 	    statusCode: number;
 	    httpStatus: string;

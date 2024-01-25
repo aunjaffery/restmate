@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { collection } from "../../ColStore";
 import { useSnapshot } from "valtio";
@@ -47,19 +48,30 @@ const SaveReq = ({ isOpen, onClose, req }) => {
       }}
     >
       <ModalOverlay />
-      <ModalContent bg="fuse.200">
-        <ModalHeader>Save Request</ModalHeader>
+      <ModalContent bg={useColorModeValue("light.100", "dark.100")}>
+        <ModalHeader
+          borderBottomWidth="1px"
+          borderColor={useColorModeValue("light.50", "dark.50")}
+          color={useColorModeValue("gray.700", "gray.300")}
+        >
+          Save Request
+        </ModalHeader>
         <ModalCloseButton />
         <form onSubmit={onSaveReq}>
           <ModalBody>
-            <Box>
+            <Box py="4">
               <Box>
-                <Text color="gray.400" fontSize="xs" fontWeight="bold" mb="1">
+                <Text
+                  color={useColorModeValue("gray.600", "gray.400")}
+                  fontSize="xs"
+                  fontWeight="bold"
+                  mb="1"
+                >
                   Request name
                 </Text>
                 <Input
                   size="sm"
-                  bg="gray.700"
+                  bg={useColorModeValue("light.200", "dark.200")}
                   name="name"
                   borderRadius="md"
                   borderWidth={0}
@@ -69,53 +81,68 @@ const SaveReq = ({ isOpen, onClose, req }) => {
                   isRequired
                 />
               </Box>
-            </Box>
-            <Box mt="4">
-              <Flex mb="1">
-                <Text color="gray.400" fontSize="xs" fontWeight="bold">
-                  Save to
-                </Text>
-                <Text color="gray.500" fontSize="xs" ml="1">
-                  Select a collection
-                </Text>
-              </Flex>
-              <Box
-                bg="none"
-                py="2"
-                borderWidth="1px"
-                borderColor="gray.700"
-                maxH="500px"
-                minH="200px"
-                overflowY="auto"
-              >
-                {cols &&
-                  cols.length &&
-                  cols.map((c) => (
-                    <Box
-                      key={c.id}
-                      _hover={{ bg: "gray.800" }}
-                      px="2"
-                      py="2"
-                      cursor="pointer"
-                      onClick={() => setSelectedID(c.id)}
-                      bg={selectedID === c.id ? "gray.800" : "none"}
-                      color={selectedID === c.id ? "fuse.300" : "gray.200"}
-                    >
-                      <Flex align="center" gridColumnGap={1}>
-                        <Box mb="5px">
-                          <LuBookmark size="14" />
-                        </Box>
-                        <Text fontSize="sm">{c.name}</Text>
-                      </Flex>
-                    </Box>
-                  ))}
+              <Box mt="4">
+                <Flex mb="1">
+                  <Text
+                    color={useColorModeValue("gray.600", "gray.400")}
+                    fontSize="xs"
+                    fontWeight="bold"
+                  >
+                    Save to
+                  </Text>
+                  <Text color="gray.500" fontSize="xs" ml="1">
+                    Select a collection
+                  </Text>
+                </Flex>
+                <Box
+                  bg="none"
+                  py="2"
+                  borderWidth="1px"
+                  borderColor={useColorModeValue("light.50", "dark.50")}
+                  maxH="500px"
+                  minH="200px"
+                  overflowY="auto"
+                >
+                  {cols &&
+                    cols.length &&
+                    cols.map((c) => (
+                      <Box
+                        key={c.id}
+                        _hover={{
+                          color: useColorModeValue("black", "white"),
+                          bg: useColorModeValue("light.200", "dark.200"),
+                        }}
+                        px="2"
+                        py="2"
+                        cursor="pointer"
+                        onClick={() => setSelectedID(c.id)}
+                        bg={
+                          selectedID === c.id
+                            ? useColorModeValue("light.200", "dark.200")
+                            : "none"
+                        }
+                        color={
+                          selectedID === c.id
+                            ? "dark.300"
+                            : useColorModeValue("gray.600", "gray.400")
+                        }
+                      >
+                        <Flex align="center" gridColumnGap={1}>
+                          <Box mb="5px">
+                            <LuBookmark size="14" />
+                          </Box>
+                          <Text fontSize="sm">{c.name}</Text>
+                        </Flex>
+                      </Box>
+                    ))}
+                </Box>
               </Box>
             </Box>
           </ModalBody>
           <ModalFooter>
             <Button
               colorScheme="blue"
-              bg="fuse.300"
+              bg="dark.300"
               color="white"
               mr={3}
               size="sm"

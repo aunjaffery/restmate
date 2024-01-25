@@ -5,6 +5,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import Layout from "./components/misc/Layout";
 import CustomTab from "./components/misc/CustomTab";
@@ -35,6 +36,7 @@ const App = () => {
             <TabList
               borderWidth={0}
               borderBottomWidth="1px"
+              borderBottomColor={useColorModeValue("light.50", "dark.50")}
               alignItems="center"
             >
               <Flex
@@ -47,7 +49,7 @@ const App = () => {
                     height: "2px",
                   },
                   "&::-webkit-scrollbar-thumb": {
-                    bg: "fuse.400",
+                    bg: "dark.200",
                     borderRadius: "20px",
                   },
                 }}
@@ -70,8 +72,8 @@ const App = () => {
                   cursor="pointer"
                   borderRadius="md"
                   _hover={{
-                    bg: "gray.600",
-                    color: "white",
+                    color: useColorModeValue("black", "white"),
+                    bg: useColorModeValue("light.200", "dark.200"),
                   }}
                 >
                   <LuPlus size="18" />

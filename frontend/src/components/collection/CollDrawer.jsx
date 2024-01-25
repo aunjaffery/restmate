@@ -9,6 +9,7 @@ import {
   IconButton,
   Input,
   Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { LuArrowUpRight, LuCheck, LuPlus, LuX } from "react-icons/lu";
@@ -49,8 +50,17 @@ const CollDrawer = () => {
   };
 
   return (
-    <Box w="300px" minW="300px" borderColor="gray.700" borderRightWidth="1px">
-      <Box h="37px" borderColor="gray.700" borderBottomWidth="1px">
+    <Box
+      w="300px"
+      minW="300px"
+      borderColor={useColorModeValue("light.50", "dark.50")}
+      borderRightWidth="1px"
+    >
+      <Box
+        h="37px"
+        borderColor={useColorModeValue("light.50", "dark.50")}
+        borderBottomWidth="1px"
+      >
         {isOpen ? (
           <form onSubmit={createNewCol}>
             <Flex h="full" align="center" justify="space-between">
@@ -62,9 +72,9 @@ const CollDrawer = () => {
                   name="name"
                   borderWidth={0}
                   borderBottomWidth="1px"
-                  borderBottomColor="fuse.300"
+                  borderBottomColor="dark.300"
                   _focusVisible={{ outline: "none" }}
-                  _hover={{ borderBottomColor: "fuse.300" }}
+                  _hover={{ borderBottomColor: "dark.300" }}
                 />
               </Box>
               <IconButton
@@ -75,8 +85,8 @@ const CollDrawer = () => {
                 icon={<LuCheck size="16" />}
                 bg="none"
                 _hover={{
-                  bg: "gray.600",
-                  color: "white",
+                  color: useColorModeValue("black", "white"),
+                  bg: useColorModeValue("light.200", "dark.200"),
                 }}
               />
               <IconButton
@@ -87,15 +97,15 @@ const CollDrawer = () => {
                 icon={<LuX size="16" />}
                 bg="none"
                 _hover={{
-                  bg: "gray.600",
-                  color: "white",
+                  color: useColorModeValue("black", "white"),
+                  bg: useColorModeValue("light.200", "dark.200"),
                 }}
               />
             </Flex>
           </form>
         ) : (
           <Flex h="100%" align="center" pl="4" justify="space-between">
-            <Text fontSize="sm" fontWeight="bold">
+            <Text fontSize="sm" fontWeight="bold" color="gray.500">
               Collections
             </Text>
             <Box
@@ -106,8 +116,8 @@ const CollDrawer = () => {
               color="gray.500"
               cursor="pointer"
               _hover={{
-                bg: "gray.600",
-                color: "white",
+                color: useColorModeValue("black", "white"),
+                bg: useColorModeValue("light.200", "dark.200"),
               }}
             >
               <LuPlus />
@@ -116,17 +126,20 @@ const CollDrawer = () => {
         )}
       </Box>
       <Box mt="4">
-        <Accordion allowToggle>
-          {cols &&
-            cols.length &&
-            cols.map((d) => (
+        {cols && cols.length ? (
+          <Accordion allowToggle>
+            {cols.map((d) => (
               <AccordionItem key={d.id} border="none">
                 <Flex
                   align="center"
-                  color="gray.400"
-                  _hover={{ color: "white" }}
+                  color={useColorModeValue("gray.600", "gray.400")}
+                  _hover={{ color: useColorModeValue("black", "white") }}
                 >
-                  <AccordionButton _expanded={{ color: "white" }} px="1" py="2">
+                  <AccordionButton
+                    _expanded={{ color: useColorModeValue("black", "white") }}
+                    px="1"
+                    py="2"
+                  >
                     <AccordionIcon mb="3px" />
                     <Box as="span" flex={1} textAlign="left" ml="1">
                       <Text fontSize="sm">{d.name}</Text>
@@ -147,10 +160,13 @@ const CollDrawer = () => {
                     <AccordionPanel
                       p={1}
                       pl="8"
-                      color="gray.400"
+                      color={useColorModeValue("gray.600", "gray.400")}
                       key={r.id}
                       cursor="pointer"
-                      _hover={{ color: "white", bg: "fuse.400" }}
+                      _hover={{
+                        color: useColorModeValue("black", "white"),
+                        bg: useColorModeValue("light.200", "dark.200"),
+                      }}
                       onClick={() => openColTab(d.id, r.id)}
                     >
                       <Flex align="center" gridColumnGap={2}>
@@ -162,18 +178,23 @@ const CollDrawer = () => {
                     </AccordionPanel>
                   ))
                 ) : (
-                  <AccordionPanel
-                    p={1}
-                    pl="8"
-                    color="gray.400"
-                    cursor="pointer"
-                  >
+                  <AccordionPanel p={1} pl="8" color="gray.400">
                     <Text fontSize="sm">No requests found</Text>
                   </AccordionPanel>
                 )}
               </AccordionItem>
             ))}
-        </Accordion>
+          </Accordion>
+        ) : (
+          <Flex h="200px" justify="center" align="center">
+            <Text
+              fontSize="sm"
+              color={useColorModeValue("gray.400", "gray.600")}
+            >
+              No Collections found
+            </Text>
+          </Flex>
+        )}
       </Box>
       <ColDetail isOpen={isOpenM} onClose={onCloseM} />
     </Box>

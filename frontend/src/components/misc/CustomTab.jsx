@@ -1,4 +1,4 @@
-import { Box, Flex, Text, useTab } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue, useTab } from "@chakra-ui/react";
 import React from "react";
 import CrudIcon from "./CrudIcon";
 import { LuX } from "react-icons/lu";
@@ -13,7 +13,7 @@ const CustomTab = React.forwardRef(({ t, onCloseTab }, ref) => {
         align="center"
         w="full"
         justify="space-between"
-        borderTopColor="fuse.300"
+        borderTopColor="dark.300"
         borderTopWidth={isSelected ? "2px" : "none"}
       >
         <Flex
@@ -23,7 +23,7 @@ const CustomTab = React.forwardRef(({ t, onCloseTab }, ref) => {
           cursor="pointer"
           {...tabProps}
           _focusVisible={{ outline: "none" }}
-          _hover={{ color: "white", opacity: 1 }}
+          _hover={{ color: useColorModeValue("black", "white"), opacity: 1 }}
           opacity={isSelected ? 1 : 0.6}
         >
           <Box mr="1">
@@ -33,10 +33,17 @@ const CustomTab = React.forwardRef(({ t, onCloseTab }, ref) => {
             {t.title}
           </Text>
         </Flex>
-        <Box borderRightWidth="1px" pr="1">
+        <Box
+          borderRightWidth="1px"
+          pr="1"
+          borderColor={useColorModeValue("light.50", "dark.50")}
+        >
           <Flex
             p="1"
-            _hover={{ bg: "gray.600", color: "white" }}
+            _hover={{
+              color: useColorModeValue("black", "white"),
+              bg: useColorModeValue("light.200", "dark.200"),
+            }}
             color="gray.500"
             borderRadius="md"
             cursor="pointer"

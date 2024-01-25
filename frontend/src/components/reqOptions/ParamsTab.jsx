@@ -6,6 +6,7 @@ import {
   InputGroup,
   InputRightElement,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { nanoid } from "nanoid";
 import { LuX } from "react-icons/lu";
@@ -52,66 +53,89 @@ const ParamsTab = ({ tab_id }) => {
           Query Params
         </Text>
       </Box>
-      {params &&
-        params.map((p, i) => (
-          <Flex
-            key={p.id}
-            borderWidth="1px"
-            borderColor="gray.700"
-            align="center"
-            w="full"
-            borderRadius="sm"
-          >
-            <Flex px="2" borderRightWidth="1px" borderColor="gray.700" h="full">
-              <Checkbox
-                colorScheme="gray"
-                isChecked={p.active}
-                name="active"
-                onChange={(e) => onChangeParam(e, p.id)}
-              />
-            </Flex>
-            <Box flex={2} borderRightWidth="1px" borderColor="gray.700">
-              <Input
-                size="sm"
-                borderWidth={0}
-                placeholder="Key"
-                color={p.active ? "white" : "gray.600"}
-                value={p.key}
-                name="key"
-                onChange={(e) => onChangeParam(e, p.id)}
-              />
-            </Box>
-            <Box flex={3}>
-              <InputGroup size="sm">
-                <Input
-                  borderWidth={0}
-                  placeholder="Value"
-                  color={p.active ? "white" : "gray.600"}
-                  value={p.value}
-                  name="value"
+      <Box
+        borderTopWidth="1px"
+        borderColor={useColorModeValue("light.50", "dark.50")}
+      >
+        {params &&
+          params.map((p, i) => (
+            <Flex
+              key={p.id}
+              borderWidth="1px"
+              borderColor={useColorModeValue("light.50", "dark.50")}
+              borderTopWidth={0}
+              align="center"
+              w="full"
+              borderRadius="sm"
+            >
+              <Flex
+                px="2"
+                borderRightWidth="1px"
+                h="full"
+                borderColor={useColorModeValue("light.50", "dark.50")}
+              >
+                <Checkbox
+                  colorScheme="gray"
+                  isChecked={p.active}
+                  name="active"
                   onChange={(e) => onChangeParam(e, p.id)}
                 />
-                {i === 0 ? null : (
-                  <InputRightElement>
-                    <Box
-                      cursor="pointer"
-                      onClick={() => onRmParam(p.id)}
-                      color="gray.600"
-                      _hover={{ color: "white" }}
-                    >
-                      <LuX />
-                    </Box>
-                  </InputRightElement>
-                )}
-              </InputGroup>
-            </Box>
-          </Flex>
-        ))}
+              </Flex>
+              <Box
+                flex={2}
+                borderRightWidth="1px"
+                borderColor={useColorModeValue("light.50", "dark.50")}
+              >
+                <Input
+                  size="sm"
+                  borderWidth={0}
+                  placeholder="Key"
+                  color={
+                    p.active
+                      ? useColorModeValue("gray.800", "white")
+                      : "gray.500"
+                  }
+                  value={p.key}
+                  name="key"
+                  onChange={(e) => onChangeParam(e, p.id)}
+                />
+              </Box>
+              <Box flex={3}>
+                <InputGroup size="sm">
+                  <Input
+                    borderWidth={0}
+                    placeholder="Value"
+                    color={
+                      p.active
+                        ? useColorModeValue("gray.800", "white")
+                        : "gray.500"
+                    }
+                    value={p.value}
+                    name="value"
+                    onChange={(e) => onChangeParam(e, p.id)}
+                  />
+                  {i === 0 ? null : (
+                    <InputRightElement>
+                      <Box
+                        cursor="pointer"
+                        onClick={() => onRmParam(p.id)}
+                        color="gray.600"
+                        _hover={{ color: "white" }}
+                      >
+                        <LuX />
+                      </Box>
+                    </InputRightElement>
+                  )}
+                </InputGroup>
+              </Box>
+            </Flex>
+          ))}
+      </Box>
       {findEmpty() ? (
         <Flex>
           <Box cursor="pointer" onClick={onAddNewParam} mt="2">
             <Text
-              color="fuse.300"
+              color="dark.300"
               fontSize="sm"
               _hover={{ textDecoration: "underline" }}
             >

@@ -5,6 +5,7 @@ import {
   Input,
   Select,
   Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
@@ -23,11 +24,11 @@ const ReqInput = ({ tab_id, onSend }) => {
   return (
     <Box pt="5">
       <Box pb="3" ml="1">
-        <Flex align="center" color="gray.400">
+        <Flex align="center" color="gray.500">
           <Box mb="3px">
             <LuUnplug size="14" />
           </Box>
-          <Text fontSize="sm" fontWeight="bold" ml="2" color="gray.300">
+          <Text fontSize="sm" fontWeight="bold" ml="2">
             {name}
           </Text>
         </Flex>
@@ -38,7 +39,7 @@ const ReqInput = ({ tab_id, onSend }) => {
             align="center"
             w="full"
             borderWidth="1px"
-            borderColor="gray.700"
+            borderColor={useColorModeValue("light.50", "dark.50")}
             h="50px"
             borderRadius="md"
           >
@@ -65,9 +66,12 @@ const ReqInput = ({ tab_id, onSend }) => {
                 DELETE
               </option>
             </Select>
-            <Box bg="gray.700" minH="25px" w="1px"></Box>
+            <Box
+              bg={useColorModeValue("gray.400", "gray.700")}
+              minH="25px"
+              w="1px"
+            ></Box>
             <Input
-              color="white"
               name="url"
               size="md"
               onChange={(e) => onChangeUrl(tab_id, e.target.value)}
@@ -79,7 +83,8 @@ const ReqInput = ({ tab_id, onSend }) => {
           </Flex>
           <Button
             type="submit"
-            bg="fuse.300"
+            bg="dark.300"
+            color="light.100"
             size="lg"
             ml="4"
             borderRadius="md"
@@ -87,7 +92,7 @@ const ReqInput = ({ tab_id, onSend }) => {
             Send
           </Button>
           <Button
-            bg="fuse.400"
+            bg={useColorModeValue("light.200", "dark.200")}
             size="lg"
             ml="4"
             borderRadius="md"

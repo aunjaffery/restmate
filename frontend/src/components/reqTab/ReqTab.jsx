@@ -6,6 +6,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { memo, useState } from "react";
 import ParamsTab from "../reqOptions/ParamsTab";
@@ -26,8 +27,8 @@ const ReqTab = memo(({ tab_id }) => {
     _focusVisible: { outline: "none" },
     _selected: {
       borderBottomWidth: "2px",
-      borderColor: "fuse.300",
-      color: "fuse.300",
+      borderColor: "dark.300",
+      color: "dark.300",
     },
   };
   const activeTab = () => {
@@ -45,7 +46,7 @@ const ReqTab = memo(({ tab_id }) => {
         <Flex w="full">
           <Box
             borderRightWidth="1px"
-            borderColor="gray.700"
+            borderColor={useColorModeValue("light.50", "dark.50")}
             w="full"
             flex={1}
             maxW="50%"

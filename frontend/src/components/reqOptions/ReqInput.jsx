@@ -13,7 +13,7 @@ import { onChangeUrl, store } from "../../AppStore";
 import { LuSave, LuUnplug } from "react-icons/lu";
 import SaveReq from "../modal/SaveReq";
 
-const ReqInput = ({ tab_id, onSend}) => {
+const ReqInput = ({ tab_id, onSend }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   console.log("__INPUT RERENDER__");
   let t = store.tabs.find((t) => t.id === tab_id);
@@ -24,11 +24,11 @@ const ReqInput = ({ tab_id, onSend}) => {
   return (
     <Box pt="5">
       <Box pb="3" ml="1">
-        <Flex align="center" color="gray.500">
+        <Flex align="center" color="gray.500" maxW="600px">
           <Box mb="3px">
             <LuUnplug size="14" />
           </Box>
-          <Text fontSize="sm" fontWeight="bold" ml="2">
+          <Text fontSize="sm" fontWeight="bold" ml="2" noOfLines={1}>
             {name}
           </Text>
         </Flex>
@@ -80,24 +80,16 @@ const ReqInput = ({ tab_id, onSend}) => {
             borderWidth={0}
           />
         </Flex>
-        <Button
-          onClick={onSend}
-          bg="dark.300"
-          color="light.100"
-          size="lg"
-          ml="4"
-          borderRadius="md"
-        >
+        <Button onClick={onSend} size="lg" ml="4">
           Send
         </Button>
         <Button
-          bg={useColorModeValue("light.200", "dark.200")}
+          // bg={useColorModeValue("light.200", "dark.200")}
           size="lg"
           ml="4"
-          borderRadius="md"
           p="0"
-          color="gray.400"
           onClick={onOpen}
+          variant="second"
         >
           <LuSave size="20" />
         </Button>

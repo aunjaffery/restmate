@@ -25,7 +25,7 @@ const CustomTab = React.forwardRef(({ t, onCloseTab }, ref) => {
           _focusVisible={{ outline: "none" }}
           _hover={{ color: useColorModeValue("black", "white"), opacity: 1 }}
           opacity={isSelected ? 1 : 0.6}
-          maxW="90%"
+          maxW="85%"
         >
           <Box mr="1">
             <CrudIcon crud={t.crud} size="xs" />

@@ -1,4 +1,4 @@
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { useCallback } from "react";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
@@ -17,14 +17,37 @@ const BodyTab = ({ tab_id }) => {
     t.body.type = "json";
   }, []);
 
+  let editorTheme = useColorModeValue(
+    githubLightInit({
+      settings: {
+        background: "none",
+        gutterBackground: "transparent",
+      },
+    }),
+    githubDarkInit({
+      settings: {
+        background: "none",
+        gutterBackground: "transparent",
+      },
+    }),
+  );
   return (
-    <Box h="calc(100vh - 260px)">
+    <Box mr="2" mt="2">
+      <Flex
+        mt="3"
+        mb="1"
+        justify="space-between"
+        align="center"
+        color="gray.500"
+      >
+        <Text fontWeight="bold" fontSize="sm">
+          Requset Body
+        </Text>
+      </Flex>
       <Box
-        mt="2"
-        mr="2"
+        h="calc(100vh - 260px)"
         borderWidth="1px"
         borderColor={useColorModeValue("light.50", "dark.50")}
-        h="full"
       >
         <CodeMirror
           width="100%"
@@ -40,20 +63,7 @@ const BodyTab = ({ tab_id }) => {
             lintGutter(jsonParseLinter()),
             EditorView.lineWrapping,
           ]}
-          theme={useColorModeValue(
-            githubLightInit({
-              settings: {
-                background: "none",
-                gutterBackground: "transparent",
-              },
-            }),
-            githubDarkInit({
-              settings: {
-                background: "none",
-                gutterBackground: "transparent",
-              },
-            }),
-          )}
+          theme={editorTheme}
         />
       </Box>
     </Box>

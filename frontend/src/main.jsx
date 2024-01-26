@@ -12,6 +12,36 @@ const config = {
   initialColorMode: "dark",
   useSystemColorMode: false,
 };
+const components = {
+  Button: {
+    variants: {
+      solid: {
+        color: "white",
+        borderRadius: "md",
+        bg: "dark.300",
+        _hover: {
+          bg: "dark.400",
+        },
+        _active: {
+          bg: "dark.400",
+        },
+      },
+      second: ({ colorMode }) => ({
+        color: "gray.500",
+        borderRadius: "md",
+        bg: "dark.200",
+        bg: colorMode === "dark" ? "dark.200" : "light.200",
+        _hover: {
+          color: "white",
+          bg: colorMode === "dark" ? "gray.700" : "gray.400",
+        },
+        _active: {
+          color: "white",
+        },
+      }),
+    },
+  },
+};
 
 const colors = {
   dark: {
@@ -19,22 +49,18 @@ const colors = {
     100: "#0d1721", //primary-bg
     200: "#122230", //sec-color: gradiant 1
     300: "#6466f1", //accent-Indigo
-    500: "#091118", //gradiant 2
+    400: "#4f46e5", //accent-Indigo-darker
+    500: "#22c55e", //green-bright
+    600: "#091118", //gradiant 2
   },
   light: {
     50: "#d3d3d3", //border color
     100: "#ffffff", //primary-bg
     200: "#e2e8f0", // sec-color: gray.200
     300: "#6466f1", //accent-Indigo
-    400: "#122230", //gradiant 1
-    500: "#091118", //gradiant 2
-  },
-  fuse: {
-    100: "#0f172a", //dark blue background
-    200: "#1e293b", // sec grayish
-    //300: "#0ea5e9", //light blue
-    300: "#6466f1", //Indigo
-    400: "#22313a", // gun-metal
+    400: "#4f46e5", //accent-Indigo-darker
+    500: "#122230", //gradiant 1
+    600: "#091118", //gradiant 2
   },
 };
 const fonts = {
@@ -45,7 +71,7 @@ const fonts = {
 const container = document.getElementById("root");
 
 const root = createRoot(container);
-const theme = extendTheme({ config, colors, fonts });
+const theme = extendTheme({ config, colors, fonts, components });
 
 root.render(
   <ChakraProvider theme={theme}>

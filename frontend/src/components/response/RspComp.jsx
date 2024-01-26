@@ -1,17 +1,57 @@
 import { Box, Flex, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
-import { json } from "@codemirror/lang-json";
-import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
-import CodeMirror, { EditorView } from "@uiw/react-codemirror";
+import { useState } from "react";
+import RspHeaders from "./RspHeaders";
+import RspBody from "./RspBody";
 
 const RspComp = ({ reqLoading, rspObj }) => {
-  const { bodyContent, statusCode, duration } = rspObj || {};
+  const { bodyContent, statusCode, duration, headers } = rspObj || {};
+  const [tab, setTab] = useState("JSON");
+  let tabColor = useColorModeValue("black", "white");
+  console.log();
+  if (reqLoading) {
+    return (
+      <Flex justify="center" align="center" w="full" h="calc(100vh - 260px)">
+        <Spinner size="lg" color="dark.300" />
+      </Flex>
+    );
+  }
+  if (!rspObj) {
+    return (
+      <Flex justify="center" align="center" w="full" h="calc(100vh - 260px)">
+        <Text fontSize="sm" color={useColorModeValue("gray.400", "gray.600")}>
+          Click Send to get a reponse
+        </Text>
+      </Flex>
+    );
+  }
   return (
     <Box w="full">
       <Box pl="4" mt="2" w="full">
-        <Flex justify="space-between" align="center" pr="2" mb="4">
-          <Text fontWeight="bold" fontSize="sm" color="gray.500">
-            Response
-          </Text>
+        <Flex justify="space-between" align="center" pr="2">
+          <Flex align="center" gridColumnGap={4}>
+            <Box
+              borderBottomWidth={tab === "JSON" ? "2px" : "none"}
+              borderColor="dark.300"
+              cursor="pointer"
+              color={tab === "JSON" ? tabColor : "gray.500"}
+              onClick={() => setTab("JSON")}
+            >
+              <Text fontWeight="bold" fontSize="sm">
+                JSON
+              </Text>
+            </Box>
+            <Box
+              borderBottomWidth={tab === "Header" ? "2px" : "none"}
+              borderColor="dark.300"
+              cursor="pointer"
+              color={tab === "Header" ? tabColor : "gray.500"}
+              onClick={() => setTab("Header")}
+            >
+              <Text fontWeight="bold" fontSize="sm">
+                Headers
+              </Text>
+            </Box>
+          </Flex>
           <Flex align="center" gridColumnGap={6}>
             {statusCode && (
               <Flex align="center">
@@ -22,7 +62,7 @@ const RspComp = ({ reqLoading, rspObj }) => {
                   fontSize="sm"
                   color={
                     statusCode >= 200 && statusCode < 300
-                      ? "green.300"
+                      ? "dark.500"
                       : "orange.300"
                   }
                 >
@@ -35,58 +75,18 @@ const RspComp = ({ reqLoading, rspObj }) => {
                 <Text fontSize="sm" mr="1">
                   Time:
                 </Text>
-                <Text fontSize="sm" color="green.300">
+                <Text fontSize="sm" color="dark.500">
                   {duration}
                 </Text>
               </Flex>
             )}
           </Flex>
         </Flex>
-        <Box
-          borderWidth="1px"
-          borderColor={useColorModeValue("light.50", "dark.50")}
-          w="full"
-          h="calc(100vh - 260px)"
-        >
-          {reqLoading ? (
-            <Flex justify="center" align="center" w="full" h="full">
-              <Spinner size="lg" color="dark.300" />
-            </Flex>
-          ) : bodyContent ? (
-            <CodeMirror
-              width="100%"
-              height="100%"
-              value={bodyContent}
-              extensions={[json(), EditorView.lineWrapping]}
-              readOnly={true}
-              basicSetup={{
-                foldGutter: true,
-                lintKeymap: true,
-              }}
-              theme={useColorModeValue(
-                githubLightInit({
-                  settings: {
-                    background: "none",
-                    gutterBackground: "transparent",
-                  },
-                }),
-                githubDarkInit({
-                  settings: {
-                    background: "none",
-                    gutterBackground: "transparent",
-                  },
-                }),
-              )}
-            />
+        <Box>
+          {tab === "JSON" ? (
+            <RspBody bodyContent={bodyContent} />
           ) : (
-            <Flex justify="center" align="center" w="full" h="full">
-              <Text
-                fontSize="sm"
-                color={useColorModeValue("gray.400", "gray.600")}
-              >
-                Click Send to get a reponse
-              </Text>
-            </Flex>
+            <RspHeaders headers={headers} />
           )}
         </Box>
       </Box>

@@ -16,6 +16,7 @@ import {
 import { collection } from "../../ColStore";
 import { useSnapshot } from "valtio";
 import { LuBookmark } from "react-icons/lu";
+import { FaBookmark } from "react-icons/fa";
 import { useState } from "react";
 import { SaveToCollection } from "../../../wailsjs/go/main/App";
 
@@ -71,10 +72,9 @@ const SaveReq = ({ isOpen, onClose, req }) => {
                 </Text>
                 <Input
                   size="sm"
-                  bg={useColorModeValue("light.200", "dark.200")}
                   name="name"
                   borderRadius="md"
-                  borderWidth={0}
+                  borderColor={useColorModeValue("light.50", "dark.50")}
                   defaultValue={
                     req.name === "Untitled Request" ? req?.url : req?.name
                   }
@@ -103,8 +103,7 @@ const SaveReq = ({ isOpen, onClose, req }) => {
                   minH="200px"
                   overflowY="auto"
                 >
-                  {cols &&
-                    cols.length &&
+                  {cols && cols.length ? (
                     cols.map((c) => (
                       <Box
                         key={c.id}
@@ -128,22 +127,36 @@ const SaveReq = ({ isOpen, onClose, req }) => {
                         }
                       >
                         <Flex align="center" gridColumnGap={1}>
-                          <Box mb="5px">
-                            <LuBookmark size="14" />
+                          <Box mb="2px">
+                            {selectedID === c.id ? (
+                              <FaBookmark size="14" />
+                            ) : (
+                              <LuBookmark size="14" />
+                            )}
                           </Box>
-                          <Text fontSize="sm">{c.name}</Text>
+                          <Text fontSize="sm" noOfLines={1} maxW="80%">
+                            {c.name}
+                          </Text>
                         </Flex>
                       </Box>
-                    ))}
+                    ))
+                  ) : (
+                    <Flex h="200px" justify="center" align="center">
+                      <Text
+                        fontSize="sm"
+                        color={useColorModeValue("gray.400", "gray.600")}
+                      >
+                        No Collections found
+                      </Text>
+                    </Flex>
+                  )}
                 </Box>
               </Box>
             </Box>
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="blue"
-              bg="dark.300"
-              color="white"
+              variant="solid"
               mr={3}
               size="sm"
               type="submit"
@@ -153,6 +166,7 @@ const SaveReq = ({ isOpen, onClose, req }) => {
             </Button>
             <Button
               size="sm"
+              variant="second"
               onClick={() => {
                 setSelectedID(null);
                 onClose();

@@ -41,6 +41,7 @@ const ReqTab = memo(({ tab_id }) => {
     let t = { ...o };
     let prms = t.params.filter((p) => p.active && p.key !== "");
     let urlString = t.url;
+    if (!urlString) return;
     let andJoin = "";
     if (prms && prms.length) {
       let prmPairs = [];
@@ -59,6 +60,7 @@ const ReqTab = memo(({ tab_id }) => {
     try {
       setReqLoading(true);
       let rsp = await Run(method, urlString, reqBodyJson, contentType, heads);
+      console.log(rsp);
       setRspObj(rsp);
       setReqLoading(false);
     } catch (err) {

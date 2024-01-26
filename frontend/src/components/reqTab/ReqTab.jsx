@@ -15,6 +15,7 @@ import RspComp from "../response/RspComp";
 import HeadersTab from "../reqOptions/HeadersTab";
 import ReqInput from "../reqOptions/ReqInput";
 import { store } from "../../AppStore";
+import { Run } from "../../../wailsjs/go/main/App";
 
 const ReqTab = memo(({ tab_id }) => {
   console.log("__REQTAB reRENDER__");
@@ -34,10 +35,35 @@ const ReqTab = memo(({ tab_id }) => {
   const activeTab = () => {
     return false;
   };
-  const onSend = (e) => {
-    e.preventDefault();
-    let req = store.tabs.find((x) => x.id === tab_id);
-    console.log(req.url);
+  const onSend = async () => {
+    //why not send whole tab
+    let o = store.tabs.find((t) => t.id === tab_id);
+    let t = { ...o };
+    let prms = t.params.filter((p) => p.active && p.key !== "");
+    let urlString = t.url;
+    let andJoin = "";
+    if (prms && prms.length) {
+      let prmPairs = [];
+      prms.map((x) => prmPairs.push(`${x.key}=${x.value}`));
+      andJoin = prmPairs.join("&");
+    }
+    if (andJoin != "") {
+      urlString = `${urlString}?${andJoin}`;
+    }
+    let contentType = "application/json";
+    let heads = t.headers
+      .filter((h) => h.active && h.key !== "")
+      .map((h) => ({ key: h.key, value: h.value }));
+    let reqBodyJson = t.body.payload;
+    let method = t.crud;
+    try {
+      setReqLoading(true);
+      let rsp = await Run(method, urlString, reqBodyJson, contentType, heads);
+      setRspObj(rsp);
+      setReqLoading(false);
+    } catch (err) {
+      setReqLoading(false);
+    }
   };
   return (
     <Box px="4">

@@ -142,7 +142,9 @@ const CollDrawer = () => {
                   >
                     <AccordionIcon mb="3px" />
                     <Box as="span" flex={1} textAlign="left" ml="1">
-                      <Text fontSize="sm">{d.name}</Text>
+                      <Text noOfLines={1} fontSize="sm" maxW="220px">
+                        {d.name}
+                      </Text>
                     </Box>
                   </AccordionButton>
                   <Box
@@ -171,7 +173,7 @@ const CollDrawer = () => {
                     >
                       <Flex align="center" gridColumnGap={2}>
                         <CrudIcon crud={r.crud} />
-                        <Text noOfLines={1} fontSize="sm">
+                        <Text noOfLines={1} fontSize="sm" maxW="200px">
                           {r.name}
                         </Text>
                       </Flex>

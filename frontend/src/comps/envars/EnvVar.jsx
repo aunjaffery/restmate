@@ -21,7 +21,7 @@ const EnvVar = ({ env }) => {
   const onAddVar = async (e) => {
     e.preventDefault();
     let k = e.target.key.value;
-    let v = e.target.value.value;
+    let v = e.target.value.value.trim();
     if (!k || !v) {
       toast.error("Error! Key or Value cannot be empty");
       return;
@@ -51,7 +51,7 @@ const EnvVar = ({ env }) => {
   const onEditVar = async (e) => {
     e.preventDefault();
     let k = e.target.key.value;
-    let v = e.target.value.value;
+    let v = e.target.value.value.trim();
     if (!k || !v) {
       toast.error("Error! Key or Value cannot be empty");
       return;

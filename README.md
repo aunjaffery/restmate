@@ -66,7 +66,7 @@ npm install
 ### Compile and Run
 
 ```bash
-wails dev
+make dev
 ```
 
 ## Support

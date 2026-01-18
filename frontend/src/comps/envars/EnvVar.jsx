@@ -135,7 +135,7 @@ const EnvVar = ({ env }) => {
       <ModalLayout open={varModal} onClose={() => setvarModal(false)} title="Environment variables">
         {!addVar && !editVar ? (
           <div className="p-6 bg-sec">
-            <div className="overflow-y-auto" style={{ maxHeight: "300px" }}>
+            <div className="overflow-y-auto no-scrollbar" style={{ maxHeight: "300px" }}>
               {env.variable && Object.keys(env.variable).length ? (
                 Object.keys(env.variable).map((v, i) => (
                   <div key={i} className="mt-4 first:mt-0 group">
@@ -153,8 +153,17 @@ const EnvVar = ({ env }) => {
                         <LuTrash size="14" />
                       </div>
                     </div>
-                    <div className="overflow-x-auto mt-2 p-2 bg-brand rounded-md text-txtsec text-xs">
-                      <pre>{env.variable[v]}</pre>
+                    <div className="relative mt-2 bg-brand rounded-md group/value">
+                      <div className="env-var-scroll overflow-x-auto overflow-y-auto p-2 text-txtsec text-xs" style={{ maxHeight: "200px" }}>
+                        <pre className="whitespace-pre-wrap break-words pr-4">{env.variable[v]}</pre>
+                      </div>
+                      <div
+                        className="absolute top-1 right-1 text-txtprim hover:text-accent cursor-pointer opacity-0 group-hover/value:opacity-100 transition-opacity bg-brand p-1 rounded"
+                        onClick={() => onCopy(env.variable[v])}
+                        title="Copy value"
+                      >
+                        <LuCopy size="14" />
+                      </div>
                     </div>
                   </div>
                 ))

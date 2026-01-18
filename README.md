@@ -38,6 +38,15 @@ Available to download for free from [here](https://github.com/aunjaffery/restmat
 - Node.js >= 18
 - NPM >= 10
 
+### System Dependencies
+
+Before installing Wails, you need to install platform-specific dependencies required for building the application.
+
+```bash
+sudo apt-get update
+sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev pkg-config build-essential nsis
+```
+
 ### Install Wails
 
 ```bash

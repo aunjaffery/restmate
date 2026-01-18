@@ -10,6 +10,7 @@ import RenameEnv from "./RenameEnv";
 const EnvVar = ({ env }) => {
   const [varModal, setvarModal] = useState(false);
   const [addVar, setaddVar] = useState(false);
+  const [editVar, setEditVar] = useState(null);
   const [renameEnv, setrenameEnv] = useState(false);
   let envLoading = useStore((x) => x.envLoading);
   const onCopy = (str) => {
@@ -20,7 +21,7 @@ const EnvVar = ({ env }) => {
   const onAddVar = async (e) => {
     e.preventDefault();
     let k = e.target.key.value;
-    let v = e.target.value.value;
+    let v = e.target.value.value.trim();
     if (!k || !v) {
       toast.error("Error! Key or Value cannot be empty");
       return;
@@ -46,6 +47,34 @@ const EnvVar = ({ env }) => {
       toast.error("Error! Cannot delete variable.");
     }
   };
+
+  const onEditVar = async (e) => {
+    e.preventDefault();
+    let k = e.target.key.value;
+    let v = e.target.value.value.trim();
+    if (!k || !v) {
+      toast.error("Error! Key or Value cannot be empty");
+      return;
+    }
+    const validKey = /^[a-zA-Z0-9_-]+$/;
+    if (!validKey.test(k)) {
+      toast.error("Error! Invalid key format.");
+      return;
+    }
+
+    if (editVar.key !== k) {
+      await useStore.getState().deleteVar(env.id, editVar.key);
+    }
+
+    let rsp = await useStore.getState().addNewVar(env.id, k, v);
+    if (rsp) {
+      toast.success("Variable updated successfully!");
+      setEditVar(null);
+    } else {
+      toast.error("Error! Cannot update variable.");
+    }
+  };
+
   const onDuplicateEnv = async () => {
     let rsp = await useStore.getState().duplicateEnv(env.id);
     if (rsp) {
@@ -104,9 +133,9 @@ const EnvVar = ({ env }) => {
         </Menu>
       </div>
       <ModalLayout open={varModal} onClose={() => setvarModal(false)} title="Environment variables">
-        {!addVar ? (
+        {!addVar && !editVar ? (
           <div className="p-6 bg-sec">
-            <div className="overflow-y-auto" style={{ maxHeight: "300px" }}>
+            <div className="overflow-y-auto no-scrollbar" style={{ maxHeight: "300px" }}>
               {env.variable && Object.keys(env.variable).length ? (
                 Object.keys(env.variable).map((v, i) => (
                   <div key={i} className="mt-4 first:mt-0 group">
@@ -114,15 +143,27 @@ const EnvVar = ({ env }) => {
                       <p className="text-lit text-sm truncate whitespace-nowrap overflow-ellipsis" style={{ maxWidth: "80%" }}>
                         {v}
                       </p>
+                      <div className="text-txtprim cursor-pointer items-center hidden group-hover:flex" onClick={() => onCopy(v)}>
+                        <LuCopy size="14" />
+                      </div>
+                      <div className="text-txtprim cursor-pointer items-center hidden group-hover:flex" onClick={() => setEditVar({ key: v, value: env.variable[v] })}>
+                        <LuPencil size="14" />
+                      </div>
                       <div className="text-red-400 cursor-pointer items-center hidden group-hover:flex" onClick={() => onDeleteVar(v)}>
                         <LuTrash size="14" />
                       </div>
-                      <div className="text-accent cursor-pointer items-center hidden group-hover:flex" onClick={() => onCopy(v)}>
+                    </div>
+                    <div className="relative mt-2 bg-brand rounded-md group/value">
+                      <div className="env-var-scroll overflow-x-auto overflow-y-auto p-2 text-txtsec text-xs" style={{ maxHeight: "200px" }}>
+                        <pre className="whitespace-pre-wrap break-words pr-4">{env.variable[v]}</pre>
+                      </div>
+                      <div
+                        className="absolute top-1 right-1 text-txtprim hover:text-accent cursor-pointer opacity-0 group-hover/value:opacity-100 transition-opacity bg-brand p-1 rounded"
+                        onClick={() => onCopy(env.variable[v])}
+                        title="Copy value"
+                      >
                         <LuCopy size="14" />
                       </div>
-                    </div>
-                    <div className="overflow-x-auto mt-2 p-2 bg-brand rounded-md text-txtsec text-xs">
-                      <pre>{env.variable[v]}</pre>
                     </div>
                   </div>
                 ))
@@ -142,6 +183,40 @@ const EnvVar = ({ env }) => {
               <CustomButton name="New Variable" clx="px-4 py-1 text-sm" onClick={() => setaddVar(true)} />
               <CustomButton name="Close" bg="bg-txtsec" clx="px-4 py-1 text-sm" onClick={() => setvarModal(false)} />
             </div>
+          </div>
+        ) : editVar ? (
+          <div className="p-6">
+            <form onSubmit={onEditVar}>
+              <div className="">
+                <div>
+                  <p className="text-txtprim text-sm mb-2">key</p>
+                  <input
+                    name="key"
+                    defaultValue={editVar.key}
+                    className="border border-txtsec bg-brand text-lit w-full outline-none p-1 px-3 text-sm focus:border-txtprim rounded-sm"
+                    required
+                    maxLength={100}
+                    autoFocus
+                  />
+                  <p className="mt-2 pl-1 text-txtsec text-xs italic">Key can only contain letters, numbers, - and _</p>
+                </div>
+                <div className="mt-3">
+                  <p className="text-txtprim text-sm mb-2">Value</p>
+                  <textarea
+                    name="value"
+                    defaultValue={editVar.value}
+                    className="border border-txtsec bg-brand text-lit w-full outline-none p-1 px-3 text-sm focus:border-txtprim rounded-sm"
+                    required
+                    rows={4}
+                    maxLength={999}
+                  />
+                </div>
+                <div className="w-full flex justify-end items-center mt-6 gap-x-4">
+                  <CustomButton name="Update" type="submit" clx="px-4 py-1" loading={envLoading} />
+                  <CustomButton name="Back" bg="bg-txtsec" clx="px-4 py-1" onClick={() => setEditVar(null)} />
+                </div>
+              </div>
+            </form>
           </div>
         ) : (
           <div className="p-6">

@@ -11,7 +11,6 @@
 
 .Toastify__toast-theme--dark {
   background-color: var(--theme-color-brand) !important;
-  border: 1px solid var(--theme-color-accent);
 }
 @theme {
   --color-brand: var(--theme-color-brand);
@@ -102,4 +101,14 @@
 
 .szh-menu__item--hover {
   background-color: var(--color-lines) !important;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

@@ -64,7 +64,7 @@ jobs:
 
       - name: Rename installer
         working-directory: ./build/bin
-        run: Rename-Item -Path "restmate-amd64-installer.exe" -NewName "${{ env.BUILD_NAME }}.exe"
+        run: Rename-Item -Path "restmate.exe" -NewName "${{ env.BUILD_NAME }}.exe"
 
       - name: show files and build name
         shell: bash

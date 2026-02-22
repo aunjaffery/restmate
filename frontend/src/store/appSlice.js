@@ -1,7 +1,7 @@
 import { GetSettings, SetSettings } from "../../wailsjs/go/main/App";
 
 export const createAppSlice = (set) => ({
-  appLoading: false,
+  appLoading: true,
   sideBarType: null,
   cookieModal: false,
   setCookieModal: (s) => set({ cookieModal: s }),
@@ -18,10 +18,8 @@ export const createAppSlice = (set) => ({
     theme: "",
   },
   getSettings: async () => {
-    set({ appLoading: true });
     let rsp = await GetSettings();
     if (!rsp.success) {
-      set({ appLoading: false });
       return;
     }
     set((x) => {
@@ -29,7 +27,6 @@ export const createAppSlice = (set) => ({
         document.documentElement.setAttribute("data-theme", rsp.data.theme);
       }
       x.settings = rsp.data;
-      x.appLoading = false;
     });
   },
   setSettings: async (k, v) => {

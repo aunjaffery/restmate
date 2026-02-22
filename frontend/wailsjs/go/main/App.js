@@ -98,6 +98,14 @@ export function RenameRequest(arg1, arg2, arg3) {
   return window['go']['main']['App']['RenameRequest'](arg1, arg2, arg3);
 }
 
+export function RestoreSession() {
+  return window['go']['main']['App']['RestoreSession']();
+}
+
+export function SaveSession(arg1) {
+  return window['go']['main']['App']['SaveSession'](arg1);
+}
+
 export function SelectEnv(arg1) {
   return window['go']['main']['App']['SelectEnv'](arg1);
 }

@@ -26,8 +26,10 @@ type App struct {
 	db         string
 	env        string
 	settings   string
+	session    string
 	jarFile    string
 	requestCtx context.CancelFunc
+	isQuitting bool
 }
 
 func NewApp() *App {

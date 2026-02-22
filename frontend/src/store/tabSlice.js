@@ -1,7 +1,8 @@
 import { nanoid } from "nanoid";
-import { GetRequest, InvokeRequest } from "../../wailsjs/go/main/App";
+import { GetRequest, InvokeRequest, RestoreSession } from "../../wailsjs/go/main/App";
 import { ChoseFile } from "../../wailsjs/go/main/App";
 import { cleanUpRequest } from "../utils/utils";
+import { toast } from "react-toastify";
 
 export function tabSchema(data = {}) {
   const defaults = {
@@ -31,9 +32,25 @@ export function tabSchema(data = {}) {
   return { ...defaults, ...data };
 }
 export const createTabsSlice = (set, get) => ({
-  tabs: [tabSchema()],
+  tabs: [],
 
   invokeLoading: false,
+  restoreTabs: async () => {
+    let rsp = await RestoreSession()
+    console.log("---- Restoring Tabs ----")
+    console.log(rsp)
+    console.log("--------")
+    if (!rsp.success) {
+      toast.error(rsp.msg);
+      set({ tabs: [tabSchema()] });
+      return;
+    }
+    if (!rsp.data || !rsp.data.length) {
+      set({ tabs: [tabSchema()] });
+    } else {
+      set({ tabs: rsp.data });
+    }
+  },
   invokeReq: async (id) => {
     set({ invokeLoading: true });
     let tab = get().tabs.find((t) => t.id === id);

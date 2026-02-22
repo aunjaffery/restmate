@@ -26,8 +26,10 @@ func (a *App) initFile(fileName, t string) {
 		a.settings = filePath
 		writeStr = `{"theme": ""}`
 	}
+	if t == "session" {
+		a.session = filePath
+	}
 	if _, err := os.Stat(filePath); err == nil {
-		fmt.Println("Collection file already exists. No changes made.")
 		return
 	} else if !os.IsNotExist(err) {
 		fmt.Println("Error checking settings file:", err)

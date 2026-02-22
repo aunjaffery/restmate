@@ -50,6 +50,10 @@ export function RenameEnv(arg1:string,arg2:string):Promise<main.JSResp>;
 
 export function RenameRequest(arg1:string,arg2:string,arg3:string):Promise<main.JSResp>;
 
+export function RestoreSession():Promise<main.JSResp>;
+
+export function SaveSession(arg1:Array<main.Request>):Promise<void>;
+
 export function SelectEnv(arg1:string):Promise<main.JSResp>;
 
 export function SetSettings(arg1:string,arg2:string):Promise<main.JSResp>;
